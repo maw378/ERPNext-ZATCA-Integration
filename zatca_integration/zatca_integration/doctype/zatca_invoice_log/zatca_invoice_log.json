@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "autoname": "ZATCA-LOG-.#####",
+ "creation": "2026-09-24 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "reference_doctype",
+  "reference_name",
+  "transaction_type",
+  "attempt_no",
+  "zatca_status",
+  "column_break_status",
+  "http_status",
+  "reported_at",
+  "request_section",
+  "request_url",
+  "request_context",
+  "response_section",
+  "response_payload",
+  "error_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Invoice Type",
+   "options": "DocType",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice",
+   "options": "reference_doctype",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "description": "STANDARD (B2B, cleared) or SIMPLIFIED (B2C, reported).",
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Transaction Type",
+   "options": "\nSTANDARD\nSIMPLIFIED",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "attempt_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Attempt No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "zatca_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ZATCA Status",
+   "options": "\nREPORTED\nCLEARED\nPENDING\nFAILED\nERROR",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "http_status",
+   "fieldtype": "Int",
+   "label": "HTTP Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reported_at",
+   "fieldtype": "Datetime",
+   "label": "Reported At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "request_section",
+   "fieldtype": "Section Break",
+   "label": "Request"
+  },
+  {
+   "description": "The engine URL that was called.",
+   "fieldname": "request_url",
+   "fieldtype": "Data",
+   "label": "Request URL",
+   "read_only": 1
+  },
+  {
+   "description": "Headers + JSON body actually sent, so Retry can replay this exact request rather than needing to rebuild it.",
+   "fieldname": "request_context",
+   "fieldtype": "Code",
+   "label": "Request Context (JSON)",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "response_section",
+   "fieldtype": "Section Break",
+   "label": "Response"
+  },
+  {
+   "fieldname": "response_payload",
+   "fieldtype": "Code",
+   "label": "Response Payload (JSON)",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-24 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Zatca Integration",
+ "name": "ZATCA Invoice Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "reference_name"
+}

@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "autoname": "field:city_id",
+ "creation": "2026-09-23 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "city_id",
+  "city_name_en",
+  "city_name_ar",
+  "column_break_name",
+  "zatca_code",
+  "region_name",
+  "country_code"
+ ],
+ "fields": [
+  {
+   "description": "ZATCA/GeoNames numeric city code - what the onboarding engine's Sign Up call needs as city_id. This is also the document name.",
+   "fieldname": "city_id",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "City ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "city_name_en",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "City Name (English)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city_name_ar",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "City Name (Arabic)"
+  },
+  {
+   "fieldname": "column_break_name",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "zatca_code",
+   "fieldtype": "Data",
+   "label": "ZATCA Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "region_name",
+   "fieldtype": "Data",
+   "label": "Region",
+   "read_only": 1
+  },
+  {
+   "default": "SA",
+   "fieldname": "country_code",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Country Code",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Zatca Integration",
+ "name": "ZATCA City",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "city_name_en",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "city_name_en"
+}

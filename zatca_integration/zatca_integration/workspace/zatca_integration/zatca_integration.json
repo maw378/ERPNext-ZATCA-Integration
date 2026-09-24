@@ -1,0 +1,102 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"zatca-hdr-1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Onboarding</b></span>\", \"col\": 12}}, {\"id\": \"zatca-sc-1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"ZATCA Settings\", \"col\": 3}}, {\"id\": \"zatca-sc-2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"ZATCA EGS Unit\", \"col\": 3}}, {\"id\": \"zatca-sp-1\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"zatca-hdr-3\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Reporting</b></span>\", \"col\": 12}}, {\"id\": \"zatca-sc-3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"ZATCA Invoice Log\", \"col\": 3}}, {\"id\": \"zatca-sp-2\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"zatca-hdr-2\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Documents</b></span>\", \"col\": 12}}, {\"id\": \"zatca-card-1\", \"type\": \"card\", \"data\": {\"card_name\": \"ZATCA\", \"col\": 4}}]",
+ "creation": "2026-09-23 17:36:43.415128",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "file",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "ZATCA Integration",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ZATCA",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ZATCA Settings",
+   "link_count": 0,
+   "link_to": "ZATCA Settings",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ZATCA EGS Unit",
+   "link_count": 0,
+   "link_to": "ZATCA EGS Unit",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ZATCA City",
+   "link_count": 0,
+   "link_to": "ZATCA City",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ZATCA Invoice Log",
+   "link_count": 0,
+   "link_to": "ZATCA Invoice Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-09-23 17:36:43.415128",
+ "modified_by": "Administrator",
+ "module": "Zatca Integration",
+ "name": "ZATCA Integration",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "ZATCA Settings",
+   "link_to": "ZATCA Settings",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "ZATCA EGS Unit",
+   "link_to": "ZATCA EGS Unit",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "ZATCA Invoice Log",
+   "link_to": "ZATCA Invoice Log",
+   "type": "DocType"
+  }
+ ],
+ "title": "ZATCA Integration"
+}

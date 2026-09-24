@@ -11,15 +11,15 @@ app_license = "mit"
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "zatca_integration",
-# 		"logo": "/assets/zatca_integration/logo.png",
-# 		"title": "Zatca Integration",
-# 		"route": "/zatca_integration",
-# 		"has_permission": "zatca_integration.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "zatca_integration",
+		"logo": "/assets/zatca_integration/logo.svg",
+		"title": "ZATCA Integration",
+		"route": "/app/zatca-integration",
+		"has_permission": "zatca_integration.api.permission.has_app_permission",
+	}
+]
 
 # Includes in <head>
 # ------------------
@@ -74,10 +74,11 @@ app_license = "mit"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "zatca_integration.utils.jinja_methods",
-# 	"filters": "zatca_integration.utils.jinja_filters"
-# }
+jinja = {
+	"methods": [
+		"zatca_integration.zatca_integration.utils.qr.render_zatca_qr",
+	],
+}
 
 # Installation
 # ------------
@@ -143,34 +144,24 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"POS Invoice": {
+		"on_submit": "zatca_integration.zatca_integration.utils.invoice.on_invoice_submit",
+	},
+	"Sales Invoice": {
+		"before_submit": "zatca_integration.zatca_integration.utils.invoice.validate_standard_invoice",
+		"on_submit": "zatca_integration.zatca_integration.utils.invoice.on_invoice_submit",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"zatca_integration.tasks.all"
-# 	],
-# 	"daily": [
-# 		"zatca_integration.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"zatca_integration.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"zatca_integration.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"zatca_integration.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"daily": [
+		"zatca_integration.zatca_integration.utils.tasks.check_pcsid_expiry",
+	],
+}
 
 # Testing
 # -------

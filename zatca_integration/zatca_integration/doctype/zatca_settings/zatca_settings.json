@@ -1,0 +1,199 @@
+{
+ "actions": [],
+ "autoname": "field:company",
+ "creation": "2026-09-22 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "environment",
+  "api_key",
+  "column_break_env",
+  "pcsid_renewal_reminder_days",
+  "identity_section",
+  "cr_number",
+  "name_en",
+  "name_ar",
+  "column_break_identity",
+  "email",
+  "phone_number",
+  "address_section",
+  "building_number",
+  "street_name",
+  "district",
+  "column_break_address",
+  "city",
+  "city_id",
+  "postal_code",
+  "additional_number"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "preprod",
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Environment",
+   "options": "sandbox\ndev\nsimulation\npreprod\nprod\nproduction",
+   "reqd": 1
+  },
+  {
+   "description": "Issued by Sign Up. Sent as the API-KEY header on every onboarding call for this company.",
+   "fieldname": "api_key",
+   "fieldtype": "Password",
+   "label": "API Key",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_env",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "30",
+   "description": "Start warning System Managers this many days before the Production CSID's assumed expiry (issuance/renewal + 5 years).",
+   "fieldname": "pcsid_renewal_reminder_days",
+   "fieldtype": "Int",
+   "label": "PCSID Renewal Reminder (Days)"
+  },
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Subscriber Details",
+   "description": "Sent once via Sign Up to register this company with the ZATCA onboarding engine and obtain its API key."
+  },
+  {
+   "fieldname": "cr_number",
+   "fieldtype": "Data",
+   "label": "CR Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name_en",
+   "fieldtype": "Data",
+   "label": "Legal Name (English)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name_ar",
+   "fieldtype": "Data",
+   "label": "Legal Name (Arabic)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address_section",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "building_number",
+   "fieldtype": "Data",
+   "label": "Building Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "street_name",
+   "fieldtype": "Data",
+   "label": "Street Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "District",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_address",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City",
+   "reqd": 1
+  },
+  {
+   "description": "The numeric city_id the onboarding engine's Sign Up call needs - picked from ZATCA City, synced from the engine's /cities lookup.",
+   "fieldname": "city_id",
+   "fieldtype": "Link",
+   "label": "City ID",
+   "options": "ZATCA City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Data",
+   "label": "Postal Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "additional_number",
+   "fieldtype": "Data",
+   "label": "Additional Number",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Zatca Integration",
+ "name": "ZATCA Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "company"
+}

@@ -1,0 +1,252 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2026-09-22 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "zatca_settings",
+  "company",
+  "environment",
+  "scope_section",
+  "transaction_type_scope",
+  "column_break_scope",
+  "pos_profile",
+  "branch",
+  "status",
+  "is_active",
+  "column_break_status",
+  "stamp_id",
+  "last_icv",
+  "onboarded_on",
+  "pcsid_issued_on",
+  "pcsid_expires_on",
+  "last_renewal_reminder_on",
+  "signing_section",
+  "pcsid",
+  "column_break_signing",
+  "private_key",
+  "pcsid_secret",
+  "compliance_section",
+  "compliance_validation_status",
+  "compliance_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "zatca_settings",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "ZATCA Settings",
+   "options": "ZATCA Settings",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "zatca_settings.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "zatca_settings.environment",
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Environment",
+   "options": "sandbox\ndev\nsimulation\npreprod\nprod\nproduction",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "label": "Scope",
+   "description": "Which invoices this unit signs - used by utils.invoice.get_egs_unit_for_invoice to pick the right unit per invoice. This is ERPNext-side routing only; it does not control what invoice-type capability ZATCA itself grants the certificate (that's negotiated during onboarding and has so far always come back Standard-only regardless of what's picked here)."
+  },
+  {
+   "fieldname": "transaction_type_scope",
+   "fieldtype": "Select",
+   "label": "Transaction Type",
+   "options": "STANDARD\nSIMPLIFIED\nBOTH",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "description": "STANDARD = Sales Invoices (B2B, cleared). SIMPLIFIED = POS Invoices (B2C, reported). BOTH if this unit's CSID covers both."
+  },
+  {
+   "fieldname": "column_break_scope",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pos_profile",
+   "fieldtype": "Link",
+   "label": "POS Profile",
+   "options": "POS Profile",
+   "depends_on": "eval:[\"SIMPLIFIED\",\"BOTH\"].includes(doc.transaction_type_scope)",
+   "description": "Ties this unit to one POS terminal's invoices. Leave blank for a company-wide SIMPLIFIED fallback."
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch",
+   "depends_on": "eval:[\"STANDARD\",\"BOTH\"].includes(doc.transaction_type_scope)",
+   "description": "Ties this unit to one branch's Sales Invoices. Leave blank for a company-wide STANDARD fallback."
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nCCSID Issued\nCompliance Passed\nProduction\nFailed",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active",
+   "in_list_view": 1,
+   "description": "Exactly one Production unit should be active per (Company, Environment, Transaction Type, POS Profile/Branch) - issuing a new Production CSID for the same scope automatically deactivates older ones."
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "The digital-stamp id returned by the onboarding engine's /onboarding/prepare call. Every subsequent call for this unit is addressed by this id. The engine still generates and persists the CCSID/PCSID credentials and private key itself, but once a Production CSID is issued this app fetches a one-time copy into the Signing Credentials section below, so invoice signing doesn't need to call the engine every time.",
+   "fieldname": "stamp_id",
+   "fieldtype": "Int",
+   "label": "Stamp ID",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "Invoice Counter Value (ICV) of the last invoice reported through this unit. ZATCA requires ICVs to increase by one per invoice from the same EGS unit - allocated by utils.invoice.allocate_icv, don't edit it by hand.",
+   "fieldname": "last_icv",
+   "fieldtype": "Int",
+   "label": "Last ICV",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "onboarded_on",
+   "fieldtype": "Datetime",
+   "label": "Onboarded On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pcsid_issued_on",
+   "fieldtype": "Datetime",
+   "label": "PCSID Issued On",
+   "read_only": 1
+  },
+  {
+   "description": "The engine no longer returns the PCSID certificate, so this isn't read from it - it defaults to 5 years after issuance/renewal per ZainZone's guidance, not a value confirmed with ZATCA.",
+   "fieldname": "pcsid_expires_on",
+   "fieldtype": "Datetime",
+   "label": "PCSID Expires On (assumed)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_renewal_reminder_on",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Last Renewal Reminder On",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "description": "Cached locally from the engine's one-time /onboarding/{stamp_id}/credentials call, made right after a Production CSID is issued or renewed. This is what invoice signing reads - it never calls the engine per invoice.",
+   "fieldname": "signing_section",
+   "fieldtype": "Section Break",
+   "label": "Signing Credentials"
+  },
+  {
+   "description": "The Production CSID (binarySecurityToken) matching the stored private key.",
+   "fieldname": "pcsid",
+   "fieldtype": "Code",
+   "label": "PCSID",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_signing",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Private key generated for this unit's CSR. A new key pair is issued on every renewal, replacing this value.",
+   "fieldname": "private_key",
+   "fieldtype": "Password",
+   "label": "Private Key",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "description": "Secret paired with the PCSID for Basic Auth against ZATCA's reporting/clearance APIs.",
+   "fieldname": "pcsid_secret",
+   "fieldtype": "Password",
+   "label": "PCSID Secret",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "compliance_section",
+   "fieldtype": "Section Break",
+   "label": "Compliance Result"
+  },
+  {
+   "fieldname": "compliance_validation_status",
+   "fieldtype": "Select",
+   "label": "Validation Status",
+   "options": "\nPASS\nFAILED",
+   "read_only": 1
+  },
+  {
+   "fieldname": "compliance_message",
+   "fieldtype": "Small Text",
+   "label": "Message",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Zatca Integration",
+ "name": "ZATCA EGS Unit",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "status"
+}
