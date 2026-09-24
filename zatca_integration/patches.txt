@@ -10,3 +10,4 @@ zatca_integration.patches.migrate_invoice_log_references
 zatca_integration.patches.add_sales_invoice_zatca_fields
 zatca_integration.patches.add_zatca_egs_unit_scope_fields
 zatca_integration.patches.add_sales_invoice_branch_field
+zatca_integration.patches.add_pos_profile_egs_unit_field

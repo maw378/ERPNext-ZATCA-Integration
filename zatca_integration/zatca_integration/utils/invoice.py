@@ -51,34 +51,80 @@ def get_settings_for_company(company: str):
 
 
 def get_egs_unit_for_invoice(doc):
-	"""Picks the ZATCA EGS Unit that should sign this invoice, instead of one
-	single company-wide unit for everything. A company can have several
-	Production units - e.g. one SIMPLIFIED unit per POS Profile (device) and
-	one STANDARD unit per Branch, matching how ZATCA models EGS units as
-	per-device/per-branch in the first place. Resolution order:
+	"""Picks the ZATCA EGS Unit that should sign this invoice. Resolution
+	order, first match wins:
 
-	  1. a unit scoped to this exact POS Profile / Branch
-	  2. a company-wide unit for this transaction type (no POS Profile/Branch set)
+	  1. POS Profile.zatca_egs_unit - an explicit, optional pin. If a POS
+	     Profile names a unit directly, that's authoritative; no scope
+	     matching needed. Ignored (not errored on) if the pinned unit isn't
+	     actually usable, so a stale pin can't hard-block reporting.
+	  2. a unit scoped to this exact POS Profile / Branch
+	  3. a company-wide unit for this transaction type (no POS Profile/Branch set)
+	  4. any active Production unit at all for this company/environment.
+	     Onboarding here always requests the BOTH-capable "1100" model, so in
+	     practice one unit already signs every invoice type - scope/pin are
+	     for when someone deliberately wants otherwise, not a requirement.
 
-	Only STANDARD/SIMPLIFIED are matched exactly; a unit scoped BOTH matches
-	either transaction type."""
+	Only STANDARD/SIMPLIFIED are matched exactly in steps 2-3; a unit scoped
+	BOTH matches either transaction type."""
 	settings = get_settings_for_company(doc.company)
 	transaction_type = get_transaction_type(doc)
 	pos_profile = doc.get("pos_profile") or None
 	branch = doc.get("branch") or None
 
-	egs_unit_name = _resolve_egs_unit(doc.company, settings.environment, transaction_type, pos_profile, branch)
+	egs_unit_name = None
+	if pos_profile:
+		egs_unit_name = _pinned_pos_profile_unit(pos_profile, doc.company, settings.environment)
+
 	if not egs_unit_name:
-		scoped_to = f"POS Profile {pos_profile}" if pos_profile else f"Branch {branch}" if branch else "no POS Profile/Branch"
+		egs_unit_name = _resolve_egs_unit(doc.company, settings.environment, transaction_type, pos_profile, branch)
+
+	if not egs_unit_name:
+		egs_unit_name = _any_active_egs_unit(doc.company, settings.environment)
+
+	if not egs_unit_name:
 		frappe.throw(
-			f"No active Production ZATCA EGS Unit found for {doc.company} / {settings.environment} / "
-			f"{transaction_type} ({scoped_to}), and no company-wide {transaction_type} fallback unit "
-			"either. Configure and onboard one - a unit's Transaction Type, POS Profile and Branch "
-			"decide which invoices it signs.",
+			f"No active Production ZATCA EGS Unit found at all for {doc.company} / {settings.environment}. "
+			"Onboard at least one EGS unit before reporting invoices.",
 			title="ZATCA Not Onboarded",
 		)
 
 	return frappe.get_doc("ZATCA EGS Unit", egs_unit_name), settings
+
+
+def _pinned_pos_profile_unit(pos_profile: str, company: str, environment: str) -> str | None:
+	"""POS Profile.zatca_egs_unit, if set and actually usable for this
+	company/environment right now - otherwise treated as unset (never
+	throws) so invoicing still falls through to the next resolution step
+	instead of hard-failing on a stale/misconfigured pin."""
+	pinned = frappe.db.get_value("POS Profile", pos_profile, "zatca_egs_unit")
+	if not pinned:
+		return None
+
+	unit = frappe.db.get_value(
+		"ZATCA EGS Unit", pinned, ["company", "environment", "status", "is_active"], as_dict=True
+	)
+	if (
+		not unit
+		or unit.company != company
+		or unit.environment != environment
+		or unit.status != "Production"
+		or not unit.is_active
+	):
+		return None
+	return pinned
+
+
+def _any_active_egs_unit(company: str, environment: str) -> str | None:
+	"""Last-resort fallback: any active Production unit for this
+	company/environment, ignoring transaction type/POS Profile/Branch scope
+	entirely."""
+	row = frappe.db.sql(
+		"select name from `tabZATCA EGS Unit` where company = %(company)s and environment = %(environment)s "
+		"and status = 'Production' and is_active = 1 order by modified desc limit 1",
+		{"company": company, "environment": environment},
+	)
+	return row[0][0] if row else None
 
 
 def _resolve_egs_unit(
