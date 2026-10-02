@@ -77,6 +77,7 @@ add_to_apps_screen = [
 jinja = {
 	"methods": [
 		"zatca_integration.zatca_integration.utils.qr.render_zatca_qr",
+		"zatca_integration.zatca_integration.utils.print_data.get_invoice_parties",
 	],
 }
 
